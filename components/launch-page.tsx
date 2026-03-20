@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 interface LaunchPageProps {
   onLaunch: () => void;
 }
@@ -12,23 +13,47 @@ export default function LaunchPage({ onLaunch }: LaunchPageProps) {
   const [countdown, setCountdown] = useState<number | null>(null);
   const safeCountdown = countdown ?? 0;
   const [showParticles, setShowParticles] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (countdown === null) return;
 
     if (countdown === 0) {
-      setTimeout(() => {
-        window.location.href = "https://www.innovatup.me/";
-      }, 900); // matches rocket animation
-      return;
+      const timeout = setTimeout(() => {
+        window.location.replace("https://www.innovatup.me/");
+      }, 900);
+
+      return () => clearTimeout(timeout);
     }
 
     const timer = setTimeout(() => {
-      setCountdown(countdown - 1);
+      setCountdown((prev) => (prev !== null ? prev - 1 : null));
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [countdown, onLaunch]);
+  }, [countdown]);
+
+  useEffect(() => {
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        // Only reset when coming from back/forward cache
+        setCountdown(null);
+        setIsAnimating(false);
+        setShowParticles(false);
+      }
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+
+    return () => {
+      window.removeEventListener("pageshow", handlePageShow);
+    };
+  }, []);
+  useEffect(() => {
+    setCountdown(null);
+    setIsAnimating(false);
+    setShowParticles(false);
+  }, []);
 
   const handleLaunch = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
