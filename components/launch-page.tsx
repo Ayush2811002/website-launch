@@ -179,10 +179,10 @@ export default function LaunchPage({ onLaunch }: LaunchPageProps) {
             />
           </div>
         ) : (
-          // Countdown Display
+          // safeCountdown Display
           <div suppressHydrationWarning className="text-center z-20">
             <div className="relative inline-block">
-              {/* Accelerating glow intensity - gets faster as countdown decreases */}
+              {/* Accelerating glow intensity - gets faster as safeCountdown decreases */}
               <div
                 suppressHydrationWarning
                 className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full blur-3xl"
@@ -202,7 +202,7 @@ export default function LaunchPage({ onLaunch }: LaunchPageProps) {
                 }}
               />
 
-              {/* Main countdown circle with dynamic shadow */}
+              {/* Main safeCountdown circle with dynamic shadow */}
               <div
                 suppressHydrationWarning
                 className="relative w-56 h-56 rounded-full border-4 flex items-center justify-center bg-gradient-to-br from-slate-900/80 to-slate-950/80 backdrop-blur-xl"
@@ -211,49 +211,19 @@ export default function LaunchPage({ onLaunch }: LaunchPageProps) {
                   boxShadow: `0 0 ${40 + (5 - safeCountdown) * 20}px rgba(34, 211, 238, ${Math.min(0.8, 0.4 + (5 - safeCountdown) * 0.1)}), inset 0 0 60px rgba(34, 211, 238, ${Math.min(0.3, 0.1 + (5 - safeCountdown) * 0.05)})`,
                 }}
               >
-                <div className="relative flex flex-col items-center justify-center">
-                  {/* 🌫️ Smoke Text */}
-                  <div className="relative flex flex-col items-center justify-center">
-                    <p className="text-cyan-300 text-xs mb-2 uppercase tracking-widest font-bold">
-                      Opening Gates In
-                    </p>
-
-                    {/* Smoke Text */}
-                    {/* <h1 className="smoke-text">
-                        {safeCountdown === 0 ? "LAUNCH" : safeCountdown}
-                      </h1> */}
-                    <h1
-                      className="smoke-text"
-                      data-text={String(safeCountdown)}
-                    >
-                      {safeCountdown}
-                    </h1>
-                  </div>
-                  {safeCountdown <= 2 && safeCountdown > 0 && (
-                    <div className="absolute top-[100%] flex gap-3">
-                      {[...Array(6)].map((_, i) => (
-                        <div
-                          key={i}
-                          className="w-4 h-4 bg-gray-400 rounded-full opacity-50 animate-smoke"
-                          style={{
-                            animationDelay: `${i * 0.15}s`,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  )}
-                  {/* ☁️ Smoke */}
-                  {safeCountdown <= 2 && safeCountdown > 0 && (
-                    <div className="absolute top-[90%] flex gap-2">
-                      {[...Array(5)].map((_, i) => (
-                        <div
-                          key={i}
-                          className="w-3 h-3 bg-gray-400 rounded-full opacity-60 animate-smoke"
-                          style={{ animationDelay: `${i * 0.2}s` }}
-                        />
-                      ))}
-                    </div>
-                  )}
+                <div className="text-center">
+                  <p className="text-cyan-300 text-xs mb-4 uppercase tracking-widest font-bold text-shadow">
+                    Opening Gates In
+                  </p>
+                  <p
+                    className="text-8xl font-black bg-gradient-to-r from-cyan-300 via-purple-400 to-pink-400 bg-clip-text text-transparent"
+                    style={{
+                      textShadow: `0 0 ${30 + (5 - safeCountdown) * 15}px rgba(34, 211, 238, ${Math.min(1, 0.5 + (5 - safeCountdown) * 0.12)})`,
+                      animation: `pulse ${Math.max(0.3, 1 - (5 - safeCountdown) * 0.15)}s ease-in-out infinite`,
+                    }}
+                  >
+                    {safeCountdown}
+                  </p>
                 </div>
               </div>
 
@@ -375,130 +345,6 @@ export default function LaunchPage({ onLaunch }: LaunchPageProps) {
         }
         :global(.animate-pulse-glow) {
           animation: pulse-glow 2s ease-in-out infinite;
-        }
-
-        @keyframes rocket-launch {
-          0% {
-            transform: translateY(0);
-            opacity: 1;
-          }
-          30% {
-            transform: translateY(-50px);
-          }
-          100% {
-            transform: translateY(-300px);
-            opacity: 0;
-          }
-        }
-
-        @keyframes flame {
-          0% {
-            transform: scaleY(1);
-            opacity: 1;
-          }
-          100% {
-            transform: scaleY(1.6);
-            opacity: 0.7;
-          }
-        }
-
-        @keyframes smoke {
-          0% {
-            transform: translateY(0) scale(1);
-            opacity: 0.6;
-          }
-          100% {
-            transform: translateY(-60px) scale(1.5);
-            opacity: 0;
-          }
-        }
-
-        /* Classes */
-        :global(.animate-rocket-launch) {
-          animation: rocket-launch 0.9s ease-in forwards;
-        }
-
-        :global(.animate-flame) {
-          animation: flame 0.2s infinite alternate;
-        }
-
-        :global(.animate-smoke) {
-          animation: smoke 1s ease-out infinite;
-        }
-        @keyframes shake {
-          0% {
-            transform: translate(0, 0);
-          }
-          25% {
-            transform: translate(1px, -2px);
-          }
-          50% {
-            transform: translate(-1px, 2px);
-          }
-          75% {
-            transform: translate(1px, 1px);
-          }
-          100% {
-            transform: translate(0, 0);
-          }
-        }
-
-        :global(.animate-shake) {
-          animation: shake 0.2s infinite;
-        }
-
-        .smoke-text {
-          font-size: 80px;
-          font-weight: 900;
-          letter-spacing: 6px;
-          color: white;
-          position: relative;
-        }
-
-        /* Each letter smoke effect */
-        .smoke-text::before,
-        .smoke-text::after {
-          content: attr(data-text);
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-          color: white;
-          overflow: hidden;
-        }
-
-        .smoke-text::before {
-          animation: smokeTop 2s infinite linear;
-          opacity: 0.6;
-          filter: blur(2px);
-        }
-
-        .smoke-text::after {
-          animation: smokeBottom 2.5s infinite linear;
-          opacity: 0.4;
-          filter: blur(4px);
-        }
-
-        @keyframes smokeTop {
-          0% {
-            clip-path: inset(0 0 80% 0);
-            transform: translateY(0);
-          }
-          100% {
-            clip-path: inset(0 0 0 0);
-            transform: translateY(-20px);
-          }
-        }
-
-        @keyframes smokeBottom {
-          0% {
-            clip-path: inset(80% 0 0 0);
-            transform: translateY(0);
-          }
-          100% {
-            clip-path: inset(0 0 0 0);
-            transform: translateY(-30px);
-          }
         }
       `}</style>
     </div>
