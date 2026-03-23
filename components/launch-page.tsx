@@ -144,13 +144,13 @@ export default function LaunchPage({ onLaunch }: LaunchPageProps) {
             {/* Logo/Icon */}
             <div className="mb-8 flex justify-center">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/50 to-purple-600/50 rounded-full blur-3xl" />
-                <div className="relative w-20 h-20 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-full flex items-center justify-center">
+                <div className="absolute inset-0 bg-white/50 rounded-full blur-3xl" />
+                <div className="relative w-28 h-28 md:w-36 md:h-36 bg-white rounded-full flex items-center justify-center">
                   <Image
                     src="/logo.png"
                     alt="Logo"
-                    width={60}
-                    height={60}
+                    width={100}
+                    height={100}
                     className="object-contain"
                   />
                 </div>
