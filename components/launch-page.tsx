@@ -18,13 +18,22 @@ export default function LaunchPage({ onLaunch }: LaunchPageProps) {
   useEffect(() => {
     if (countdown === null) return;
 
+    // if (countdown === 0) {
+    //   const timeout = setTimeout(() => {
+    //     window.location.replace("https://www.innovatup.me/");
+    //   }, 900);
+
     if (countdown === 0) {
+      setShowParticles(true); // ensure particles explode
+
       const timeout = setTimeout(() => {
         window.location.replace("https://www.innovatup.me/");
-      }, 900);
+      }, 1300); // IMPORTANT: give time for blast
 
       return () => clearTimeout(timeout);
     }
+    //   return () => clearTimeout(timeout);
+    // }
 
     const timer = setTimeout(() => {
       setCountdown((prev) => (prev !== null ? prev - 1 : null));
@@ -181,7 +190,38 @@ export default function LaunchPage({ onLaunch }: LaunchPageProps) {
         ) : (
           // safeCountdown Display
           <div suppressHydrationWarning className="text-center z-20">
+            {safeCountdown === 0 && (
+              <div className="absolute inset-0 bg-white animate-flash z-[999]" />
+            )}
             <div className="relative inline-block">
+              <svg className="absolute inset-0 w-full h-full -rotate-90">
+                <circle
+                  cx="112"
+                  cy="112"
+                  r="100"
+                  stroke="rgba(255,255,255,0.1)"
+                  strokeWidth="4"
+                  fill="none"
+                />
+                <circle
+                  cx="112"
+                  cy="112"
+                  r="100"
+                  stroke="url(#gradient)"
+                  strokeWidth="4"
+                  fill="none"
+                  strokeDasharray={628}
+                  strokeDashoffset={628 * (safeCountdown / 5)}
+                  strokeLinecap="round"
+                  className="transition-all duration-1000 ease-linear"
+                />
+                <defs>
+                  <linearGradient id="gradient">
+                    <stop offset="0%" stopColor="#22d3ee" />
+                    <stop offset="100%" stopColor="#a855f7" />
+                  </linearGradient>
+                </defs>
+              </svg>
               {/* Accelerating glow intensity - gets faster as safeCountdown decreases */}
               <div
                 suppressHydrationWarning
@@ -270,8 +310,16 @@ export default function LaunchPage({ onLaunch }: LaunchPageProps) {
             <p
               suppressHydrationWarning
               className="text-slate-300 mt-12 text-lg font-semibold"
+              // style={{
+              //   animation: `pulse ${Math.max(0.3, 0.8 - (5 - safeCountdown) * 0.1)}s ease-in-out infinite`,
+              // }}
               style={{
-                animation: `pulse ${Math.max(0.3, 0.8 - (5 - safeCountdown) * 0.1)}s ease-in-out infinite`,
+                transform: `scale(${1 + (5 - safeCountdown) * 0.08})`,
+                transition: "transform 0.3s ease",
+                animation:
+                  safeCountdown <= 2
+                    ? "shake 0.3s infinite"
+                    : `pulse ${Math.max(0.3, 1 - (5 - safeCountdown) * 0.15)}s ease-in-out infinite`,
               }}
             >
               {safeCountdown === 1
@@ -345,6 +393,38 @@ export default function LaunchPage({ onLaunch }: LaunchPageProps) {
         }
         :global(.animate-pulse-glow) {
           animation: pulse-glow 2s ease-in-out infinite;
+        }
+        @keyframes shake {
+          0% {
+            transform: translate(0, 0);
+          }
+          25% {
+            transform: translate(2px, -2px);
+          }
+          50% {
+            transform: translate(-2px, 2px);
+          }
+          75% {
+            transform: translate(2px, 2px);
+          }
+          100% {
+            transform: translate(0, 0);
+          }
+        }
+        @keyframes flash {
+          0% {
+            opacity: 0;
+          }
+          40% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+          }
+        }
+
+        :global(.animate-flash) {
+          animation: flash 0.7s ease-out;
         }
       `}</style>
     </div>
